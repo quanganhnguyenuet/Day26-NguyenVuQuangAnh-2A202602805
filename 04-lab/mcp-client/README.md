@@ -15,7 +15,7 @@ AI agent built with **Google Agent Development Kit (ADK)** that uses tools from 
                                                    ┌─────────────────────┐
                                                    │  MCP Server         │
                                                    │  localhost:8085/mcp │
-                                                   │  FastMCP + Tools    │
+                                                   │  MCPServer + Tools  │
                                                    └─────────────────────┘
                                                              │
                                                              ▼
@@ -36,34 +36,31 @@ AI agent built with **Google Agent Development Kit (ADK)** that uses tools from 
 
 ## Quick Start
 
-### 1. Start the MCP Server
+### 1. Configure and start the MCP Server
 
-```bash
-cd ../mcp-server
-export WEATHERAPI_KEY="your_weatherapi_key"
-uv run python weather.py
+Fill `../mcp-server/.env` with your `WEATHERAPI_KEY`, then run:
+
+```powershell
+cd ..\mcp-server
+python .\weather.py
 ```
 
 ### 2. Setup Environment
 
-```bash
-cd mcp-client
-
-# Create .env file with your Google API key
-# Get free key from: https://aistudio.google.com/apikey
-echo "GOOGLE_API_KEY=your_google_api_key_here" > .env
-```
+Fill the existing `.env` file with your Google API key from
+https://aistudio.google.com/apikey.
 
 ### 3. Install Dependencies
 
-```bash
-uv sync
+```powershell
+python -m pip install -e ..\mcp-server -e .
 ```
 
 ### 4. Run the Agent
 
-```bash
-uv run adk web
+```powershell
+python .\verify_setup.py
+adk web
 ```
 
 ### 5. Use the Agent
@@ -103,7 +100,7 @@ connection_params = StreamableHTTPConnectionParams(
 
 root_agent = Agent(
     name="weather_agent",
-    model="gemini-2.5-flash",
+    model="gemini-3.8-flash",
     tools=[weather_tools],
 )
 ```
@@ -125,19 +122,21 @@ root_agent = Agent(
 
 ### Fallback Mode
 
-If MCP connection fails, the agent runs in fallback mode without tools.
-Fix the connection and restart ADK web.
+If the MCP connection fails, start the server first and verify that
+`MCP_SERVER_URL` is correct, then restart ADK web.
 
 ## Environment Variables
 
 Create `.env` file:
 ```bash
-GOOGLE_API_KEY=your_gemini_api_key
+GOOGLE_API_KEY=
+GOOGLE_GENAI_USE_VERTEXAI=FALSE
+MCP_SERVER_URL=http://localhost:8085/mcp
 ```
 
 ## Resources
 
 - [Google ADK Documentation](https://google.github.io/adk-docs/)
 - [MCP Specification](https://modelcontextprotocol.io/)
-- [FastMCP GitHub](https://github.com/jlowin/fastmcp)
+- [MCP Python SDK](https://github.com/modelcontextprotocol/python-sdk)
 - [WeatherAPI](https://www.weatherapi.com/)

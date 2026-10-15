@@ -1,5 +1,5 @@
-# Use Python 3.12 slim image
-FROM python:3.12-slim
+# Match the Python version used for this lab.
+FROM python:3.11-slim
 
 # Set working directory
 WORKDIR /app
